@@ -4,6 +4,7 @@ import 'NewTask.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'NewNote.dart';
+import 'Notes.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -22,18 +23,18 @@ class homePage extends StatefulWidget {
 }
 
 class _homePageState extends State<homePage> {
-  String filterType = "today";
+  String filterType = "Aujourd'hui";
   DateTime today = new DateTime.now();
-  String taskPop = "close";
+  String taskPop = "fermer";
   var monthNames = [
     "JAN",
-    "FEB",
-    "MAR",
-    "APR",
+    "FEV",
+    "MARS",
+    "AVR",
     "MAY",
-    "JUN",
+    "JUIN",
     "JUL",
-    "AUG",
+    "AOU",
     "SEPT",
     "OCT",
     "NOV",
@@ -77,10 +78,10 @@ class _homePageState extends State<homePage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            changeFilter("today");
+                            changeFilter("Aujourd'hui");
                           },
                           child: Text(
-                            "Today",
+                            "Aujourd'hui",
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                         ),
@@ -90,7 +91,7 @@ class _homePageState extends State<homePage> {
                         Container(
                           height: 4,
                           width: 120,
-                          color: (filterType == "today")
+                          color: (filterType == "Aujourd'hui")
                               ? Colors.white
                               : Colors.transparent,
                         )
@@ -101,10 +102,10 @@ class _homePageState extends State<homePage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            changeFilter("monthly");
+                            changeFilter("mois");
                           },
                           child: Text(
-                            "Monthly",
+                            "Mois",
                             style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                         ),
@@ -114,7 +115,7 @@ class _homePageState extends State<homePage> {
                         Container(
                           height: 4,
                           width: 120,
-                          color: (filterType == "monthly")
+                          color: (filterType == "mois")
                               ? Colors.white
                               : Colors.transparent,
                         )
@@ -123,11 +124,12 @@ class _homePageState extends State<homePage> {
                   ],
                 ),
               ),
-              (filterType == "monthly")
+              (filterType == "mois")
                   ? TableCalendar(
                       calendarController: ctrlr,
                       startingDayOfWeek: StartingDayOfWeek.monday,
                       initialCalendarFormat: CalendarFormat.week,
+                      locale: 'fr_FR',
                     )
                   : Container(),
               Expanded(
@@ -144,7 +146,7 @@ class _homePageState extends State<homePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Today ${monthNames[today.month - 1]}, ${today.day}/${today.year}",
+                              "Aujourd'hui ${monthNames[today.month - 1]}, ${today.day}/${today.year}",
                               style:
                                   TextStyle(fontSize: 18, color: Colors.grey),
                             )
@@ -186,7 +188,7 @@ class _homePageState extends State<homePage> {
                                     height: 5,
                                   ),
                                   Text(
-                                    "My Task",
+                                    "My Tasks",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 15),
                                   )
@@ -214,22 +216,25 @@ class _homePageState extends State<homePage> {
                             Container(
                               width: 80,
                             ),
-                            Container(
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.content_paste,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    "Quick",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 15),
-                                  )
-                                ],
+                            InkWell(
+                              onTap: openNotes,
+                              child: Container(
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.content_paste,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "My Notes",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                             Container(
@@ -259,7 +264,7 @@ class _homePageState extends State<homePage> {
                       left: 0,
                       right: 0,
                       child: InkWell(
-                        onTap: openTaskPop,
+                        onTap: openNotes,
                         child: Container(
                           height: 80,
                           width: 80,
@@ -453,5 +458,9 @@ class _homePageState extends State<homePage> {
   openNewCheckList() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => CheckList()));
+  }
+
+  openNotes() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => Notes()));
   }
 }

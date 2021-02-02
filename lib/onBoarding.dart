@@ -43,9 +43,9 @@ class _onboardingState extends State<onboarding> {
                 child: PageView(
                   controller: _pageController,
                   children: [
-                    onBoardPage("onboard1", "Welcome to Aking"),
-                    onBoardPage("onboard2", "Work Happens"),
-                    onBoardPage("onboard3", "Tasks & Assignments"),
+                    onBoardPage("onboard1", "Bienvenue a DoList"),
+                    onBoardPage("onboard2", "Travail a faire"),
+                    onBoardPage("onboard3", "Taches & Notes"),
                   ],
                   onPageChanged: (value) => {setCurrentPage(value)},
                 ),
@@ -87,7 +87,7 @@ class _onboardingState extends State<onboarding> {
                             spreadRadius: 3)
                       ]),
                       child: Text(
-                        "Get Started",
+                        "Lancez-Vous",
                         style: TextStyle(fontSize: 15),
                       ),
                     ),
@@ -96,7 +96,7 @@ class _onboardingState extends State<onboarding> {
                     height: 30,
                   ),
                   Text(
-                    "Login",
+                    "Connexion",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

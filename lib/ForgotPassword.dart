@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list/LoginPage.dart';
 
 import 'ResetPassword.dart';
 
@@ -37,7 +38,8 @@ class _forgotPasswordState extends State<forgotPassword> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => LoginPage()));
           },
         ),
       ),
@@ -50,11 +52,11 @@ class _forgotPasswordState extends State<forgotPassword> {
               height: 20,
             ),
             Text(
-              "Forgot Password",
+              "Mot de passe oublié",
               style: TextStyle(fontSize: 35),
             ),
             Text(
-              "Please enter your email to receive your password and reset information",
+              "Veuillez saisir votre email pour recevoir votre code et réinitialiser le mot de passe",
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
             SizedBox(
@@ -82,7 +84,7 @@ class _forgotPasswordState extends State<forgotPassword> {
                       borderRadius: BorderRadius.all(Radius.circular(7)),
                       color: Color(0xfff96060)),
                   child: Text(
-                    "Send Request",
+                    "Envoyer",
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,

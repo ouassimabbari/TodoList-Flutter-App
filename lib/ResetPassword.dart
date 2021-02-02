@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list/ForgotPassword.dart';
 
 import 'PasswordChangedSuccessfully.dart';
 
@@ -26,7 +27,10 @@ class _resetPasswordState extends State<resetPassword> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => ForgotPassword()));
+          },
           icon: Icon(
             Icons.arrow_back,
             color: Colors.black,
@@ -35,25 +39,24 @@ class _resetPasswordState extends State<resetPassword> {
       ),
       body: Container(
         padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             SizedBox(
               height: 20,
             ),
             Text(
-              "Reset Password",
+              "Réinistialisez le mot de passe",
               style: TextStyle(fontSize: 35),
             ),
             Text(
-              "Reset code was sent to your mail Id. Please enter the code and create a new password",
+              "Le code de réinitialisation à été envoyé à votre email. Veuillez saisir le code et changer votre mot de passe",
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
             SizedBox(
               height: 20,
             ),
             Text(
-              "Reset code",
+              "Code",
               style: TextStyle(
                 fontSize: 23,
               ),
@@ -66,43 +69,44 @@ class _resetPasswordState extends State<resetPassword> {
               height: 40,
             ),
             Text(
-              "Password",
+              "Mot de passe",
               style: TextStyle(
                 fontSize: 23,
               ),
             ),
             TextField(
-              decoration: InputDecoration(hintText: "Enter your password here"),
+              decoration: InputDecoration(
+                  hintText: "Saisissez votre nouveau mot de passe ici"),
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(
               height: 40,
             ),
             Text(
-              "Confirm Password",
+              "Confirmer le mot de passe",
               style: TextStyle(
                 fontSize: 23,
               ),
             ),
             TextField(
-              decoration:
-                  InputDecoration(hintText: "Re-Enter your password here"),
+              decoration: InputDecoration(
+                  hintText: "Re-Saisissez votre mot de passe ici"),
               style: TextStyle(fontSize: 20),
             ),
-            Expanded(
-              child: Center(
-                child: InkWell(
-                  onTap: openSuccessPage,
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 100, vertical: 20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(7)),
-                        color: Color(0xfff96060)),
-                    child: Text(
-                      "Change Password",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: InkWell(
+                onTap: openSuccessPage,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      color: Color(0xfff96060)),
+                  child: Text(
+                    "Changer le mot de passe",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),

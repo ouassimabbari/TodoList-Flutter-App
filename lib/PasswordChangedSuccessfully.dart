@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list/LoginPage.dart';
+import 'HomePage.dart';
 
 class PasswordChangedSuccessfully extends StatelessWidget {
   @override
@@ -31,14 +33,14 @@ class _passwordChangedSuccessfullyState
             width: 300,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("asset/image/success.png"))),
+                    image: AssetImage("assets/images/success.png"))),
           ),
           Text(
-            "Successful!",
+            "Succés!",
             style: TextStyle(fontSize: 35),
           ),
           Text(
-            "You have successfully changed our password. Please use your new password to login!",
+            "Votre mot de passe à été modifié avec succés. Veuillez l'utiliser pour vous connecter!",
             style: TextStyle(
               fontSize: 18,
             ),
@@ -49,14 +51,14 @@ class _passwordChangedSuccessfullyState
           ),
           Center(
             child: InkWell(
-              onTap: openHomePage,
+              onTap: openLoginPage,
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(7)),
                     color: Color(0xfff96060)),
                 child: Text(
-                  "Continue",
+                  "Continuer",
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
               ),
@@ -67,7 +69,8 @@ class _passwordChangedSuccessfullyState
     );
   }
 
-  void openHomePage() {
-    //Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+  void openLoginPage() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 }

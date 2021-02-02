@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
-
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:todo_list/HomePage.dart';
+import 'package:todo_list/api.dart';
+import 'package:todo_list/onBoarding.dart';
 import 'ForgotPassword.dart';
+import 'SignUp.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'avenir'),
-      home: loginPage(),
+    return GraphQLProvider(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(fontFamily: 'avenir'),
+        home: loginPage(),
+      ),
+      client: client,
     );
   }
 }
@@ -23,6 +30,17 @@ class loginPage extends StatefulWidget {
 }
 
 class _loginPageState extends State<loginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool isLoginSuccessful = true;
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,35 +53,45 @@ class _loginPageState extends State<loginPage> {
             color: Colors.black,
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => OnBoarding()));
           },
         ),
       ),
       body: Container(
         padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             SizedBox(
               height: 20,
             ),
             Text(
-              "Welcome Back!",
+              "Bienvenue à nouveau!",
               style: TextStyle(fontSize: 35),
             ),
             Text(
-              "Sign in to continue...",
+              "Connectez-vous pour continuer...",
               style: TextStyle(fontSize: 18, color: Colors.grey),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            !isLoginSuccessful
+                ? SizedBox(
+                    height: 20,
+                    child: Text(
+                      "Email ou mot de passe incorrecte",
+                      style: TextStyle(fontSize: 16, color: Color(0xfff96060)),
+                    ))
+                : SizedBox(
+                    height: 20,
+                  ),
             Text(
-              "User Name",
+              "Email",
               style: TextStyle(fontSize: 23),
             ),
             TextField(
-              decoration: InputDecoration(hintText: "John Doe"),
+              controller: emailController,
+              decoration: InputDecoration(
+                  hintText: "JohnDoe@example.com",
+                  errorText: validateEmail(emailController.text)),
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -72,11 +100,15 @@ class _loginPageState extends State<loginPage> {
               height: 40,
             ),
             Text(
-              "Password",
+              "Mot de passe",
               style: TextStyle(fontSize: 23),
             ),
             TextField(
-              decoration: InputDecoration(hintText: "Enter your password here"),
+              controller: passwordController,
+              decoration: InputDecoration(
+                  hintText: "Saisissez votre mot de passe ici...",
+                  errorText: validatePassword(passwordController.text)),
+              obscureText: true,
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -90,13 +122,17 @@ class _loginPageState extends State<loginPage> {
                 InkWell(
                   onTap: openForgotPassword,
                   child: Text(
-                    "Forgot Password?",
+                    "Mot de passe oublié?",
                     style: TextStyle(fontSize: 16),
                   ),
                 )
               ],
             ),
-            Expanded(
+            SizedBox(
+              height: 50,
+            ),
+            InkWell(
+              onTap: login,
               child: Center(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 130, vertical: 20),
@@ -104,7 +140,7 @@ class _loginPageState extends State<loginPage> {
                       borderRadius: BorderRadius.all(Radius.circular(7)),
                       color: Color(0xfff96060)),
                   child: Text(
-                    "Login",
+                    "Connexion",
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -112,6 +148,34 @@ class _loginPageState extends State<loginPage> {
                   ),
                 ),
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    "Vous n'avez pas de compte?",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: openSignUp,
+                  child: Container(
+                    padding: EdgeInsets.only(right: 12),
+                    child: Text(
+                      "Inscrivez-vous",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xfff96060),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             )
           ],
         ),
@@ -119,8 +183,49 @@ class _loginPageState extends State<loginPage> {
     );
   }
 
+  String validatePassword(String value) {
+    if (!(value.length > 5) && value.isNotEmpty) {
+      return "Password should contain more than 5 characters";
+    }
+    return null;
+  }
+
+  String validateEmail(String value) {
+    if (!(value.length > 5) && value.isNotEmpty) {
+      return "Password should contain more than 5 characters";
+    }
+    return null;
+  }
+
   void openForgotPassword() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => ForgotPassword()));
+  }
+
+  void openSignUp() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => SignUp()));
+  }
+
+  void login() async {
+    GraphQLClient client = GraphQLProvider.of(context).value;
+    final QueryResult user = await client.query(
+      QueryOptions(
+          document: gql(getUserByEmailQuery),
+          pollInterval: Duration(milliseconds: 2000),
+          variables: {
+            'email': emailController.text,
+          }),
+    );
+    if (user == null ||
+        user.data["userByEmail"]["password"] != passwordController.text) {
+      setState(() {
+        isLoginSuccessful = false;
+      });
+    } else {
+      print(emailController.text);
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => HomePage()));
+    }
   }
 }
