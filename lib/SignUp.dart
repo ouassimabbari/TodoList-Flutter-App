@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/LoginPage.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:todo_list/api.dart';
+import 'SignUpSuccessful.dart';
 
 class SignUp extends StatelessWidget {
   const SignUp({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'avenir',
+    return GraphQLProvider(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'avenir',
+        ),
+        home: signUp(),
       ),
-      home: signUp(),
+      client: client,
     );
   }
 }
@@ -65,6 +71,7 @@ class _signUpState extends State<signUp> {
               style: TextStyle(fontSize: 23),
             ),
             TextField(
+              controller: firstNameController,
               decoration: InputDecoration(hintText: "Nom"),
               style: TextStyle(
                 fontSize: 20,
@@ -78,6 +85,7 @@ class _signUpState extends State<signUp> {
               style: TextStyle(fontSize: 23),
             ),
             TextField(
+              controller: lastNameController,
               decoration: InputDecoration(hintText: "Prénom"),
               style: TextStyle(
                 fontSize: 20,
@@ -91,6 +99,7 @@ class _signUpState extends State<signUp> {
               style: TextStyle(fontSize: 23),
             ),
             TextField(
+              controller: emailController,
               decoration: InputDecoration(hintText: "JohnDoe@example.com"),
               style: TextStyle(
                 fontSize: 20,
@@ -104,6 +113,7 @@ class _signUpState extends State<signUp> {
               style: TextStyle(fontSize: 23),
             ),
             TextField(
+              controller: passwordController,
               decoration:
                   InputDecoration(hintText: "Saisissez votre mot de passe ici"),
               style: TextStyle(
@@ -113,18 +123,21 @@ class _signUpState extends State<signUp> {
             SizedBox(
               height: 10,
             ),
-            Center(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                    color: Color(0xfff96060)),
-                child: Text(
-                  "Créez votre compte",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+            InkWell(
+              onTap: signUp,
+              child: Center(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      color: Color(0xfff96060)),
+                  child: Text(
+                    "Créez votre compte",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
@@ -156,8 +169,29 @@ class _signUpState extends State<signUp> {
     );
   }
 
+  void signUp() async {
+    GraphQLClient client = GraphQLProvider.of(context).value;
+    final QueryResult user = await client.mutate(MutationOptions(
+      document: gql(createUserMutation),
+      variables: {
+        'email': emailController.text,
+        'password': passwordController.text,
+        'lastName': lastNameController.text,
+        'firstName': firstNameController.text
+      },
+    ));
+    if (user.data["addUser"]["firstName"] == firstNameController.text) {
+      openSuccess();
+    }
+  }
+
   void openSignIn() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => LoginPage()));
+  }
+
+  void openSuccess() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => SignUpSuccessful()));
   }
 }

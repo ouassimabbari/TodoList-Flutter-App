@@ -5,9 +5,43 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:todo_list/api.dart';
 
-class CheckList extends StatelessWidget {
+class UpdateNote extends StatelessWidget {
+  double pinkBorder;
+  double blueBorder;
+  double greenBorder;
+  double yellowBorder;
+  double purpleBorder;
+  String title;
+  String id;
+  String date;
+  String time;
+  String color;
   String userID;
-  CheckList(String userID) {
+  String description;
+  UpdateNote(
+      double pinkBorder,
+      double blueBorder,
+      double greenBorder,
+      double yellowBorder,
+      double purpleBorder,
+      String title,
+      String description,
+      String id,
+      String date,
+      String time,
+      String color,
+      String userID) {
+    this.pinkBorder = pinkBorder;
+    this.blueBorder = blueBorder;
+    this.greenBorder = greenBorder;
+    this.yellowBorder = yellowBorder;
+    this.purpleBorder = purpleBorder;
+    this.description = description;
+    this.title = title;
+    this.id = id;
+    this.date = date;
+    this.time = time;
+    this.color = color;
     this.userID = userID;
   }
   @override
@@ -16,37 +50,116 @@ class CheckList extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'avenir'),
-        home: checkList(this.userID),
+        home: updateNote(
+          this.pinkBorder,
+          this.blueBorder,
+          this.greenBorder,
+          this.yellowBorder,
+          this.purpleBorder,
+          this.description,
+          this.title,
+          this.id,
+          this.date,
+          this.time,
+          this.color,
+          this.userID,
+        ),
       ),
       client: client,
     );
   }
 }
 
-class checkList extends StatefulWidget {
+class updateNote extends StatefulWidget {
+  double pinkBorder;
+  double blueBorder;
+  double greenBorder;
+  double yellowBorder;
+  double purpleBorder;
+  String title;
+  String id;
+  String description;
+  String date;
+  String time;
+  String color;
   String userID;
-  checkList(String userID) {
+  updateNote(
+      double pinkBorder,
+      double blueBorder,
+      double greenBorder,
+      double yellowBorder,
+      double purpleBorder,
+      String description,
+      String title,
+      String id,
+      String date,
+      String time,
+      String color,
+      String userID) {
+    this.pinkBorder = pinkBorder;
+    this.blueBorder = blueBorder;
+    this.greenBorder = greenBorder;
+    this.yellowBorder = yellowBorder;
+    this.purpleBorder = purpleBorder;
+    this.description = description;
+    this.title = title;
+    this.id = id;
+    this.date = date;
+    this.time = time;
+    this.color = color;
     this.userID = userID;
   }
   @override
-  _checkListState createState() => _checkListState();
+  _updateNoteState createState() => _updateNoteState();
 }
 
-class _checkListState extends State<checkList> {
-  final titleController = new TextEditingController();
+class _updateNoteState extends State<updateNote> {
+  final titreController = new TextEditingController();
+  final descriptionController = new TextEditingController();
+  double pinkBorder;
+  double blueBorder;
+  double greenBorder;
+  double yellowBorder;
+  double purpleBorder;
+  String description;
+  String title;
+  String id;
+  List<String> dateArray;
+  List<String> timeArray;
+  String color;
   String userID;
-  double pinkBorder = 0;
-  double blueBorder = 0;
-  double greenBorder = 0;
-  double yellowBorder = 0;
-  double purpleBorder = 0;
+  int year;
+  int month;
+  int day;
+  int hour;
+  int minute;
+  DateTime dateTime;
   String theDate;
   String theTime;
-
+  String theColor;
   @override
   void initState() {
     super.initState();
+    pinkBorder = widget.pinkBorder;
+    blueBorder = widget.blueBorder;
+    greenBorder = widget.greenBorder;
+    yellowBorder = widget.yellowBorder;
+    purpleBorder = widget.purpleBorder;
+    description = widget.description;
+    descriptionController.text = description;
+    title = widget.title;
+    titreController.text = title;
+    id = widget.id;
+    dateArray = widget.date.split("-");
+    timeArray = widget.time.split(":");
+    color = widget.color;
     userID = widget.userID;
+    year = int.parse(dateArray[0]);
+    month = int.parse(dateArray[1]);
+    day = int.parse(dateArray[2]);
+    hour = int.parse(timeArray[0]);
+    minute = int.parse(timeArray[1]);
+    dateTime = new DateTime(year, month, day, hour, minute);
   }
 
   @override
@@ -59,7 +172,7 @@ class _checkListState extends State<checkList> {
         backgroundColor: Color(0xfff96060),
         elevation: 0,
         title: Text(
-          "Nouvelle Todo",
+          "Modifiez la note",
           style: TextStyle(fontSize: 25),
         ),
         leading: IconButton(
@@ -118,11 +231,66 @@ class _checkListState extends State<checkList> {
                               padding: EdgeInsets.all(10),
                               color: Colors.grey.withOpacity(0.2),
                               child: TextField(
-                                controller: titleController,
+                                controller: titreController,
                                 decoration: InputDecoration(
                                     hintText: "Titre",
                                     border: InputBorder.none),
                                 style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              "Description",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 150,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(15),
+                                      topLeft: Radius.circular(15)),
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.5))),
+                              child: TextField(
+                                controller: descriptionController,
+                                maxLines: 6,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Ajoutez une description ici",
+                                ),
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            Container(
+                              height: 50,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(15),
+                                      bottomLeft: Radius.circular(15)),
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.5))),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.attach_file,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
                             SizedBox(
@@ -141,7 +309,7 @@ class _checkListState extends State<checkList> {
                                 var date = await showDatePicker(
                                     context: context,
                                     firstDate: DateTime(1900),
-                                    initialDate: currentValue ?? DateTime.now(),
+                                    initialDate: currentValue ?? dateTime,
                                     lastDate: DateTime(2100));
                                 var dateArray = date.toString().split(" ");
                                 var dateString = dateArray[0];
@@ -165,7 +333,7 @@ class _checkListState extends State<checkList> {
                                 final time = await showTimePicker(
                                   context: context,
                                   initialTime: TimeOfDay.fromDateTime(
-                                      currentValue ?? DateTime.now()),
+                                      currentValue ?? dateTime),
                                 );
                                 var timeArray = time.toString().split("(");
                                 var newTimeArray = timeArray[1].split(")");
@@ -313,7 +481,33 @@ class _checkListState extends State<checkList> {
                               height: 40,
                             ),
                             InkWell(
-                              onTap: createTodo,
+                              onTap: () async {
+                                if (blueBorder == 5) theColor = "blue";
+                                if (purpleBorder == 5) theColor = "purple";
+                                if (yellowBorder == 5) theColor = "yellow";
+                                if (greenBorder == 5) theColor = "green";
+                                if (pinkBorder == 5) theColor = "pink";
+                                GraphQLClient client =
+                                    GraphQLProvider.of(context).value;
+                                var note = await client.mutate(MutationOptions(
+                                  document: gql(updateNoteMutation),
+                                  variables: {
+                                    'id': id,
+                                    'title': titreController.text,
+                                    'forDate': theDate + "-" + theTime,
+                                    'description': descriptionController.text,
+                                    'color': theColor,
+                                    'userID': userID
+                                  },
+                                ));
+                                if (note != null) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              HomePage(userID)));
+                                }
+                              },
                               child: Container(
                                 padding: EdgeInsets.symmetric(vertical: 15),
                                 width: double.infinity,
@@ -323,7 +517,7 @@ class _checkListState extends State<checkList> {
                                     color: Color(0xffff96060)),
                                 child: Center(
                                   child: Text(
-                                    "Ajouter",
+                                    "Enregistrer",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18),
                                   ),
@@ -342,32 +536,5 @@ class _checkListState extends State<checkList> {
         ),
       ),
     );
-  }
-
-  void createTodo() async {
-    print("Hi");
-    GraphQLClient client = GraphQLProvider.of(context).value;
-    final QueryResult todo = await client.mutate(MutationOptions(
-      document: gql(createTodoMutation),
-      variables: {
-        'title': titleController.text,
-        'forDate': theDate + "-" + theTime,
-        'isCompleted': false,
-        'color': (pinkBorder == 5)
-            ? "pink"
-            : (blueBorder == 5)
-                ? "blue"
-                : (greenBorder == 5)
-                    ? "green"
-                    : (yellowBorder == 5)
-                        ? "yellow"
-                        : "purple",
-        'userID': userID
-      },
-    ));
-    if (todo.data["addTodo"]["title"] == titleController.text) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage(userID)));
-    }
   }
 }

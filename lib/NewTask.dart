@@ -2,22 +2,37 @@ import 'package:flutter/material.dart';
 import 'HomePage.dart';
 
 class NewTask extends StatelessWidget {
+  String userID;
+  NewTask(String userID) {
+    this.userID = userID;
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'avenir'),
-      home: newTask(),
+      home: newTask(this.userID),
     );
   }
 }
 
 class newTask extends StatefulWidget {
+  String userID;
+  newTask(String userID) {
+    this.userID = userID;
+  }
   @override
   _newTaskState createState() => _newTaskState();
 }
 
 class _newTaskState extends State<newTask> {
+  String userID;
+  @override
+  void initState() {
+    super.initState();
+    userID = widget.userID;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +41,7 @@ class _newTaskState extends State<newTask> {
         backgroundColor: Color(0xfff96060),
         elevation: 0,
         title: Text(
-          "New Task",
+          "Nouvelle tache",
           style: TextStyle(fontSize: 25),
         ),
         leading: IconButton(
@@ -35,8 +50,8 @@ class _newTaskState extends State<newTask> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => HomePage(userID)));
           },
         ),
       ),
@@ -73,7 +88,7 @@ class _newTaskState extends State<newTask> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Text(
-                          "For",
+                          "Pour",
                           style: TextStyle(fontSize: 18),
                         ),
                         Container(
@@ -83,7 +98,7 @@ class _newTaskState extends State<newTask> {
                                   BorderRadius.all(Radius.circular(20)),
                               color: Colors.grey.withOpacity(0.2)),
                           child: Text(
-                            "Asignee",
+                            "Membre",
                             style: TextStyle(fontSize: 18),
                           ),
                         ),
@@ -91,7 +106,7 @@ class _newTaskState extends State<newTask> {
                           width: 10,
                         ),
                         Text(
-                          "In",
+                          "Dans",
                           style: TextStyle(fontSize: 18),
                         ),
                         Container(
@@ -101,7 +116,7 @@ class _newTaskState extends State<newTask> {
                                   BorderRadius.all(Radius.circular(20)),
                               color: Colors.grey.withOpacity(0.2)),
                           child: Text(
-                            "Project",
+                            "Projet",
                             style: TextStyle(fontSize: 18),
                           ),
                         ),
@@ -115,7 +130,7 @@ class _newTaskState extends State<newTask> {
                       color: Colors.grey.withOpacity(0.2),
                       child: TextField(
                         decoration: InputDecoration(
-                            hintText: "Title", border: InputBorder.none),
+                            hintText: "Titre", border: InputBorder.none),
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
@@ -148,7 +163,7 @@ class _newTaskState extends State<newTask> {
                               maxLines: 6,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: "Add description here",
+                                hintText: "Ajouter la description ici",
                               ),
                               style: TextStyle(fontSize: 18),
                             ),
@@ -186,7 +201,7 @@ class _newTaskState extends State<newTask> {
                             color: Colors.grey.withOpacity(0.2),
                             child: TextField(
                               decoration: InputDecoration(
-                                hintText: "Due Date",
+                                hintText: "Date",
                                 border: InputBorder.none,
                               ),
                               style: TextStyle(fontSize: 18),
@@ -196,7 +211,7 @@ class _newTaskState extends State<newTask> {
                             height: 20,
                           ),
                           Text(
-                            "Add member",
+                            "Ajouter un membre",
                             style: TextStyle(fontSize: 18),
                           ),
                           SizedBox(
@@ -209,7 +224,7 @@ class _newTaskState extends State<newTask> {
                                     BorderRadius.all(Radius.circular(20)),
                                 color: Colors.grey.withOpacity(0.2)),
                             child: Text(
-                              "Anyone",
+                              "membre",
                               style: TextStyle(fontSize: 18),
                             ),
                           ),
@@ -225,7 +240,7 @@ class _newTaskState extends State<newTask> {
                                 color: Color(0xffff96060)),
                             child: Center(
                               child: Text(
-                                "Add Task",
+                                "Ajouter",
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18),
                               ),

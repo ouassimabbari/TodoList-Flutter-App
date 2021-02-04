@@ -223,9 +223,8 @@ class _loginPageState extends State<loginPage> {
         isLoginSuccessful = false;
       });
     } else {
-      print(emailController.text);
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => HomePage(user.data["userByEmail"]["id"])));
     }
   }
 }
